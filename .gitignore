@@ -1,0 +1,64 @@
+# Eclipse
+.metadata/
+.project
+.classpath
+.settings/
+
+# Maven/Gradle
+.mvn/
+.gradle/
+build/
+target/
+
+# IDE Generated Files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.rar
+*.gz
+*.7z
+*.tar
+*.log
+*.bak
+*.tmp
+*.swp
+*.orig
+*.old
+
+# Generated files
+*.java~
+*.class~
+*.md~
+
+# Local History
+.local-history/
+
+# Temporary files
+*~
+#
+# Ignore .DS_Store files on macOS
+.DS_Store
+
+# Ignore VCS files
+.git/
+.svn/
+.hg/
+.cvs/
+
+# Ignore IntelliJ IDEA files
+.idea/
+*.iml
+
+# Ignore NetBeans files
+nbproject/
+build.xml
+
+# Ignore Visual Studio Code files
+.vscode/
+
+# Ignore Docker files
+Dockerfile*
+docker-compose.yml
+.dockerignore
