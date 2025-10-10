@@ -1,10 +1,12 @@
 package com.hm.schwab.datastructs.schwab;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public class Enums {
 	public enum Session {
-	    NORMAL, AM, PM, SEAMLESS
+	    NORMAL, AM, PM, SEAMLESS, EXTO
 	}
 
 	public enum Duration {
@@ -21,6 +23,10 @@ public class Enums {
 
 	public enum RequestedDestination {
 	    INET, ECN_ARCA, CBOE, AMEX, PHLX, ISE, BOX, NYSE, NASDAQ, BATS, C2, AUTO
+	}
+	
+	public enum OrderTypeRequest { 
+		MARKET, LIMIT, STOP, STOP_LIMIT, TRAILING_STOP, CABINET, NON_MARKETABLE, MARKET_ON_CLOSE, EXERCISE, TRAILING_STOP_LIMIT, NET_DEBIT, NET_CREDIT, NET_ZERO, LIMIT_ON_CLOSE 
 	}
 
 	public enum StopPriceLinkBasis {
@@ -144,20 +150,38 @@ public class Enums {
     }
 
     public enum DivFreq {
-        @JsonProperty("1")
-        ANNUALLY,
-        @JsonProperty("2")
-        SEMI_ANNUALLY,
-        @JsonProperty("3")
-        THREE_TIMES_A_YEAR,
-        @JsonProperty("4")
-        QUARTERLY,
-        @JsonProperty("6")
-        EVERY_OTHER_MONTH,
-        @JsonProperty("11")
-        ELEVEN_TIMES_A_YEAR,
-        @JsonProperty("12")
-        MONTHLY
+    	NO_DIVIDEND(0),
+        ANNUALLY(1),
+        SEMI_ANNUALLY(2),
+        THREE_TIMES_A_YEAR(3),
+        QUARTERLY(4),
+        EVERY_OTHER_MONTH(6),
+        ELEVEN_TIMES_A_YEAR(11),
+        MONTHLY(12);
+
+        private final int value;
+
+        // Constructor to set the integer value for each constant
+        DivFreq(int value) {
+            this.value = value;
+        }
+
+        // Optional: For serialization, tell Jackson to use this value
+        @JsonValue
+        public int getValue() {
+            return value;
+        }
+
+        // For deserialization, map the JSON integer to the enum constant
+        @JsonCreator
+        public static DivFreq fromValue(int value) {
+            for (DivFreq freq : DivFreq.values()) {
+                if (freq.value == value) {
+                    return freq;
+                }
+            }
+            throw new IllegalArgumentException("Unknown dividend frequency value: " + value);
+        }
     }
 
     public enum FundStrategy {

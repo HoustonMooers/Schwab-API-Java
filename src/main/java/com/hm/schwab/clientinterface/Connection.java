@@ -24,9 +24,11 @@ public class Connection {
 	}
 
 	//used for canceling orders
-	public HttpResponse<String> deleteRequest(String uri, Header[] headers) throws IOException, InterruptedException {
-		Builder requestbuilder = HttpRequest.newBuilder().uri(URI.create(uri)).DELETE();
-		addHeaders(requestbuilder, headers);
+	public HttpResponse<String> deleteRequest(String uri, String token) throws IOException, InterruptedException {
+		Builder requestbuilder = HttpRequest.newBuilder().uri(URI.create(uri))
+				.DELETE()
+				.header("accept", "*/*")
+				.header("Authorization", "Bearer " + token);
 		HttpRequest request = requestbuilder.build();
         return client.send(request, HttpResponse.BodyHandlers.ofString());
 	}
@@ -35,6 +37,16 @@ public class Connection {
 		Builder requestbuilder = HttpRequest.newBuilder()
 				.uri(URI.create(uri))
 				.POST(BodyPublishers.ofString(body))
+				.header("Content-Type", "application/json")
+				.header("Authorization", "Bearer " + token);
+		HttpRequest request = requestbuilder.build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+	}
+	
+	public HttpResponse<String> putRequest(String uri, String token, String body) throws IOException, InterruptedException {
+		Builder requestbuilder = HttpRequest.newBuilder()
+				.uri(URI.create(uri))
+				.PUT(BodyPublishers.ofString(body))
 				.header("Content-Type", "application/json")
 				.header("Authorization", "Bearer " + token);
 		HttpRequest request = requestbuilder.build();

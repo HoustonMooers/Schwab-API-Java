@@ -26,4 +26,49 @@ public class QuoteError extends QuoteResponseObject  {
                 ", invalidSymbols=" + invalidSymbols +
                 '}';
     }
+
+	@Override
+	public double getBid() {
+		return -1;
+	}
+
+	@Override
+	public double getAsk() {
+		return -1;
+	}
+	
+	@Override
+	public double getLast() {
+		return -1;
+	}
+
+	@Override
+	public double getLow() {
+		return -1;
+	}
+
+	@Override
+	public double getHigh() {
+		return -1;
+	}
+
+	@Override
+	public double getOpen() {
+		return -1;
+	}
+
+	@Override
+	public double getClose() {
+		return -1;
+	}
+	
+	@Override
+	public double getChange() {
+		return 0;
+	}
+	
+	@Override
+	public long getVolume() {
+		return 0;
+	}
 }

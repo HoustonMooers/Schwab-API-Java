@@ -24,6 +24,14 @@ public class HistoricalDataQuery {
 		this.frequencytype = frequencytype;
 		this.frequency = frequency;
 	}
+	
+	public HistoricalDataQuery(String symbol, PeriodType periodtype, FrequencyType frequencytype, int frequency) {
+		this.symbol = symbol;
+		this.periodtype = periodtype;
+		this.period = -1;
+		this.frequencytype = frequencytype;
+		this.frequency = frequency;
+	}
 
 	public void setStartDate(LocalDateTime startDate) {
 		this.startDate = startDate;
@@ -47,8 +55,10 @@ public class HistoricalDataQuery {
 		sb.append(symbol);
 		sb.append("&periodType=");
 		sb.append(periodtype);
-		sb.append("&period=");
-		sb.append(period);
+		if(period != -1) {
+			sb.append("&period=");
+			sb.append(period);
+		}
 		sb.append("&frequencyType=");
 		sb.append(frequencytype);
 		sb.append("&frequency=");

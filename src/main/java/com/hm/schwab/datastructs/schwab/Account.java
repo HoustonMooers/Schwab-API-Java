@@ -12,6 +12,22 @@ public class Account {
     public SecuritiesAccount securitiesAccount;
     @JsonProperty("aggregatedBalance")
     public AggregatedBalance aggregatedBalance;
+    
+    public double getNetLiq() {
+    	return aggregatedBalance.currentLiquidationValue;
+    }
+    
+    public double getBuyingPower() {
+    	return securitiesAccount.getBuyingPower();
+    }
+    
+    public double getCash() {
+    	return securitiesAccount.getCash();
+    }
+    
+    public String getAccountNumber() {
+    	return securitiesAccount.getAccountNumber();
+    }
 
     @Override
     public String toString() {

@@ -29,7 +29,11 @@ public class SingleQuoteQuery {
 
 	public String getURI(String baseurl) {
 		StringBuilder sb = new StringBuilder(baseurl);
-		sb.append(symbol);
+		try {
+			sb.append(URLEncoder.encode(symbol, "UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		sb.append("/quotes");
 
 		if(fields != null) {

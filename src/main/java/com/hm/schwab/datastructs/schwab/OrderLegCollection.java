@@ -16,6 +16,7 @@ public class OrderLegCollection {
 		this.instruction = instruction;
 		this.quantity = quantity;
 		this.instrument = instrument;
+		this.positionEffect = PositionEffect.AUTOMATIC;
 	}
 
 	public OrderLegCollection() { }

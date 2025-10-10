@@ -153,7 +153,15 @@ public class Order {
         sb.append("/orders");
         return sb.toString();
     }
-
+    
+    public String getURIByOrder(String baseurl, String accountnumber) {
+        StringBuilder sb = new StringBuilder(baseurl);
+        sb.append(accountnumber);
+        sb.append("/orders/");
+        sb.append(orderId);
+        return sb.toString();
+    }
+   
     @Override
     public String toString() {
         return "Order{" +

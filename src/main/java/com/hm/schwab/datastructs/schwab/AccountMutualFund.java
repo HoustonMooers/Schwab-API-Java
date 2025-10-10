@@ -22,6 +22,16 @@ public class AccountMutualFund extends AccountsInstrument {
     public long instrumentId;
     @JsonProperty("netChange")
     public double netChange;
+    
+	@Override
+	public String getSymbol() {
+		return symbol;
+	}
+	
+	@Override
+	public String getDescription() {
+		return description;
+	}
 
     @Override
     public String toString() {

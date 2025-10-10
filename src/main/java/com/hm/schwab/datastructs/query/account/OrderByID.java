@@ -9,7 +9,7 @@ public class OrderByID {
 		this.orderid = orderid;
 	}
 
-	public OrderByID(String accountnumber, int orderid) {
+	public OrderByID(String accountnumber, long orderid) {
 		this.accountnumber = accountnumber;
 		this.orderid = orderid;
 	}

@@ -28,4 +28,14 @@ import com.hm.schwab.datastructs.schwab.Enums.AssetMainType;
 public abstract class QuoteResponseObject {
     @JsonProperty("assetMainType")
     public AssetMainType assetMainType;
+    
+    public abstract double getBid();
+    public abstract double getAsk();
+	public abstract double getLast();
+	public abstract double getLow();
+	public abstract double getHigh();
+	public abstract double getOpen();
+	public abstract double getClose();
+	public abstract double getChange();
+	public abstract long getVolume();
 }

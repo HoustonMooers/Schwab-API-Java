@@ -2,6 +2,13 @@ package com.hm.schwab.clientinterface;
 
 import java.io.IOException;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hm.schwab.datastructs.query.marketdata.HistoricalDataQuery;
@@ -23,8 +30,60 @@ public class MarketData {
     public static String baseuri = "https://api.schwabapi.com/marketdata/v1/";
     private static Connection connection = Connection.getConnection();
     private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ExecutorService threadPool = Executors.newFixedThreadPool(7);
 
+//    public static QuoteResponse getQuotes(QuoteQuery quotequery, String token) throws IOException, InterruptedException {
+//        if(quotequery.getNumSymbolsInRequest() > 200) {
+//        	QuoteQuery[] quotequerybatches = quotequery.split(200);
+//        	QuoteResponse qr = getQuotesSingleBatch(quotequerybatches[0], token);
+//        	for(int i = 1; i < quotequerybatches.length; i++) {
+//        		QuoteResponse nextbatch = getQuotesSingleBatch(quotequerybatches[i], token);
+//        		qr.merge(nextbatch);
+//        	}
+//        	return qr;
+//        }
+//        return getQuotesSingleBatch(quotequery, token);
+//    }
+    
     public static QuoteResponse getQuotes(QuoteQuery quotequery, String token) throws IOException, InterruptedException {
+        // If 200 or fewer symbols, process directly without threading
+        if (quotequery.getNumSymbolsInRequest() <= 200) {
+            return getQuotesSingleBatch(quotequery, token);
+        }
+
+        // Split the query into batches of 200 symbols
+        QuoteQuery[] quotequerybatches = quotequery.split(200);
+
+        // Submit all batches to the thread pool
+        List<Future<QuoteResponse>> futures = new ArrayList<>();
+        for (QuoteQuery batch : quotequerybatches) {
+            futures.add(threadPool.submit(() -> getQuotesSingleBatch(batch, token)));
+        }
+
+        // Collect results from all futures
+        List<QuoteResponse> responses = new ArrayList<>();
+        for (Future<QuoteResponse> future : futures) {
+            try {
+                responses.add(future.get());
+            } catch (ExecutionException e) {
+                throw new IOException("Error fetching quotes", e);
+            }
+        }
+
+        // Merge all responses into a single QuoteResponse
+        if (responses.isEmpty()) {
+        	QuoteResponse qr = new QuoteResponse();
+        	qr.quotes = new HashMap<>();
+            return qr;
+        }
+        QuoteResponse qr = responses.get(0);
+        for (int i = 1; i < responses.size(); i++) {
+            qr.merge(responses.get(i));
+        }
+        return qr;
+    }
+    
+    private static QuoteResponse getQuotesSingleBatch(QuoteQuery quotequery, String token) throws IOException, InterruptedException {
         HttpResponse<String> response = connection.getRequest(quotequery.getURI(baseuri), Connection.getHeaders(token));
         connection.checkResponseCode(response);
         try {
@@ -33,7 +92,7 @@ public class MarketData {
             throw new RuntimeException("Failed to parse Quotes response", e);
         }
     }
-
+    
     public static QuoteResponse getQuote(SingleQuoteQuery quotequery, String token) throws IOException, InterruptedException {
         HttpResponse<String> response = connection.getRequest(quotequery.getURI(baseuri), Connection.getHeaders(token));
         connection.checkResponseCode(response);

@@ -33,4 +33,49 @@ public class FutureOptionResponse extends QuoteResponseObject  {
                 ", reference=" + reference +
                 '}';
     }
+
+	@Override
+	public double getBid() {
+		return quote.bidPrice;
+	}
+
+	@Override
+	public double getAsk() {
+		return quote.askPrice;
+	}
+	
+	@Override
+	public double getLast() {
+		return quote.lastPrice;
+	}
+	
+	@Override
+	public double getLow() {
+		return quote.lowPrice;
+	}
+
+	@Override
+	public double getHigh() {
+		return quote.highPrice;
+	}
+
+	@Override
+	public double getOpen() {
+		return quote.openPrice;
+	}
+
+	@Override
+	public double getClose() {
+		return quote.closePrice;
+	}
+	
+	@Override
+	public double getChange() {
+		return quote.netChange;
+	}
+	
+	@Override
+	public long getVolume() {
+		return quote.totalVolume;
+	}
 }

@@ -27,6 +27,40 @@ public class MarginAccount extends SecuritiesAccount {
     public MarginBalance currentBalances;
     @JsonProperty("projectedBalances")
     public MarginBalance projectedBalances;
+    
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public int getRoundTrips() {
+        return roundTrips;
+    }
+
+    public boolean isDayTrader() {
+        return isDayTrader;
+    }
+
+    public boolean isClosingOnlyRestricted() {
+        return isClosingOnlyRestricted;
+    }
+
+    public boolean isPfcbFlag() {
+        return pfcbFlag;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+    
+	@Override
+	protected double getBuyingPower() {
+		return currentBalances.buyingPower;
+	}
+
+	@Override
+	protected double getCash() {
+		return initialBalances.cashBalance;
+	}
 
     @Override
     public String toString() {

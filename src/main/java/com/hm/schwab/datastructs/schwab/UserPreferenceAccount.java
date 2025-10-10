@@ -23,4 +23,7 @@ public class UserPreferenceAccount {
 
     @JsonProperty("autoPositionEffect")
     public boolean autoPositionEffect;
+    
+    @JsonProperty("lotSelectionMethod")
+    public String lotSelectionMethod;
 }

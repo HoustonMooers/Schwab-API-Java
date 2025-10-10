@@ -12,10 +12,13 @@ import com.hm.schwab.datastructs.schwab.Enums.AssetType;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = AccountCashEquivalent.class, name = "CASH_EQUIVALENT"),
         @JsonSubTypes.Type(value = AccountEquity.class, name = "EQUITY"),
+        @JsonSubTypes.Type(value = AccountEquity.class, name = "COLLECTIVE_INVESTMENT"),
         @JsonSubTypes.Type(value = AccountFixedIncome.class, name = "FIXED_INCOME"),
         @JsonSubTypes.Type(value = AccountMutualFund.class, name = "MUTUAL_FUND"),
         @JsonSubTypes.Type(value = AccountOption.class, name = "OPTION")
 })
 public abstract class AccountsInstrument {
     public transient AssetType assetType;
+    public abstract String getSymbol();
+    public abstract String getDescription();
 }

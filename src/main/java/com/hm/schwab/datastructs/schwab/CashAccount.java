@@ -28,6 +28,40 @@ public class CashAccount extends SecuritiesAccount {
     @JsonProperty("projectedBalances")
     public CashBalance projectedBalances;
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public int getRoundTrips() {
+        return roundTrips;
+    }
+
+    public boolean isDayTrader() {
+        return isDayTrader;
+    }
+
+    public boolean isClosingOnlyRestricted() {
+        return isClosingOnlyRestricted;
+    }
+
+    public boolean isPfcbFlag() {
+        return pfcbFlag;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+    
+	@Override
+	protected double getBuyingPower() {
+		return currentBalances.cashAvailableForTrading;
+	}
+	
+	@Override
+	protected double getCash() {
+		return currentBalances.totalCash;
+	}
+    
     @Override
     public String toString() {
         return "CashAccount{" +

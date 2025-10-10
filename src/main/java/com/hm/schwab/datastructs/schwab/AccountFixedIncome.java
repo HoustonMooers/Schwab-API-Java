@@ -28,6 +28,16 @@ public class AccountFixedIncome extends AccountsInstrument {
     public double factor;
     @JsonProperty("variableRate")
     public double variableRate;
+    
+	@Override
+	public String getSymbol() {
+		return symbol;
+	}
+	
+	@Override
+	public String getDescription() {
+		return description;
+	}
 
     @Override
     public String toString() {

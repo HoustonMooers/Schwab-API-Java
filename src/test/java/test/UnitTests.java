@@ -76,7 +76,7 @@ public class UnitTests {
 	private void cancelOrder() {
 		OrderByID query = new OrderByID(1002488075304l);
 		try {
-			api.cancelOrder(query);
+			api.cancelOrder(query, "8675209");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

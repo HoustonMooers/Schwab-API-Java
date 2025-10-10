@@ -24,6 +24,16 @@ public class AccountCashEquivalent extends AccountsInstrument {
     public double netChange;
     @JsonProperty("type")
     public String type;
+    
+	@Override
+	public String getSymbol() {
+		return symbol;
+	}
+	
+	@Override
+	public String getDescription() {
+		return description;
+	}
 
     @Override
     public String toString() {

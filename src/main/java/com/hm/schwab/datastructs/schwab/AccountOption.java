@@ -10,15 +10,6 @@ import com.hm.schwab.datastructs.schwab.Enums.AssetType;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountOption extends AccountsInstrument {
-	public AccountOption() {
-		this.assetType = AssetType.OPTION;
-	}
-
-	public AccountOption(String symbol) {
-		this();
-		this.symbol = symbol;
-	}
-
     @JsonProperty("cusip")
     public String cusip;
     @JsonProperty("symbol")
@@ -39,6 +30,25 @@ public class AccountOption extends AccountsInstrument {
     public String type;
     @JsonProperty("underlyingSymbol")
     public String underlyingSymbol;
+    
+	public AccountOption() {
+		this.assetType = AssetType.OPTION;
+	}
+
+	public AccountOption(String symbol) {
+		this();
+		this.symbol = symbol;
+	}
+    
+	@Override
+	public String getSymbol() {
+		return symbol;
+	}
+	
+	@Override
+	public String getDescription() {
+		return description;
+	}
 
     @Override
     public String toString() {

@@ -20,4 +20,8 @@ public class QuoteResponse {
                 "quotes=" + quotes +
                 '}';
     }
+
+	public synchronized void merge(QuoteResponse nextbatch) {
+		quotes.putAll(nextbatch.quotes);
+	}
 }

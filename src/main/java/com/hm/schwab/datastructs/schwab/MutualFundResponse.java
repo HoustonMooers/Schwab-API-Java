@@ -42,4 +42,49 @@ public class MutualFundResponse extends QuoteResponseObject  {
                 ", reference=" + reference +
                 '}';
     }
+
+	@Override
+	public double getBid() {
+		return quote.closePrice;
+	}
+
+	@Override
+	public double getAsk() {
+		return quote.closePrice;
+	}
+	
+	@Override
+	public double getLast() {
+		return quote.closePrice;
+	}
+	
+	@Override
+	public double getLow() {
+		return getClose();
+	}
+
+	@Override
+	public double getHigh() {
+		return getClose();
+	}
+
+	@Override
+	public double getOpen() {
+		return getClose();
+	}
+
+	@Override
+	public double getClose() {
+		return quote.closePrice;
+	}
+	
+	@Override
+	public double getChange() {
+		return quote.netChange;
+	}
+	
+	@Override
+	public long getVolume() {
+		return quote.totalVolume;
+	}
 }
