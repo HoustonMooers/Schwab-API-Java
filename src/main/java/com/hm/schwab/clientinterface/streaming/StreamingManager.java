@@ -145,7 +145,7 @@ public class StreamingManager {
 					if (notify != null) {
 						for (Map<String, Object> notifyItem : notify) {
 							if (notifyItem.containsKey("heartbeat")) {
-								System.out.println("Heartbeat received: " + notifyItem.get("heartbeat"));
+								//System.out.println("Heartbeat received: " + notifyItem.get("heartbeat"));
 							}
 						}
 						return; // Exit after handling notify
@@ -346,7 +346,7 @@ public class StreamingManager {
 		if (loginException != null) {
 			throw loginException;
 		}
-		startHeartbeat(); // Start heartbeat after successful login
+		//startHeartbeat(); // Start heartbeat after successful login
 	}
 
 	private void startHeartbeat() {

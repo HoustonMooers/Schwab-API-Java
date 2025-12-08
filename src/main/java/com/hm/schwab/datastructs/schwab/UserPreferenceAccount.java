@@ -14,16 +14,22 @@ public class UserPreferenceAccount {
 
     @JsonProperty("nickName")
     public String nickName;
-
-    @JsonProperty("accountColor")
-    public String accountColor;
-
+    
     @JsonProperty("displayAcctId")
     public String displayAcctId;
-
+    
     @JsonProperty("autoPositionEffect")
     public boolean autoPositionEffect;
     
+    @JsonProperty("accountColor")
+    public String accountColor;
+    
     @JsonProperty("lotSelectionMethod")
     public String lotSelectionMethod;
+    
+    @JsonProperty("hasFuturesAccount")
+    public boolean hasFuturesAccount;
+    
+    @JsonProperty("hasForexAccount")
+    public boolean hasForexAccount;
 }
