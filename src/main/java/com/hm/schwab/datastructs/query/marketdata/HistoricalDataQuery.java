@@ -63,10 +63,13 @@ public class HistoricalDataQuery {
 		sb.append(frequencytype);
 		sb.append("&frequency=");
 		sb.append(frequency);
+		sb.append("&startDate=");
 
 		if(startDate != null) {
-			sb.append("&startDate=");
 			sb.append(TimeUtils.toEpochMillis(startDate));
+		}
+		else {
+			sb.append(0);
 		}
 
 		if(endDate != null) {
