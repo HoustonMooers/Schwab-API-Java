@@ -44,7 +44,6 @@ public class Account {
     }
 
     public static List<Order> getOrders(OrderQuery orderquery, String token) throws IOException, InterruptedException {
-    	System.out.println(orderquery.getURI(baseurl));
         HttpResponse<String> response = connection.getRequest(orderquery.getURI(baseurl), Connection.getHeaders(token));
         connection.checkResponseCode(response);
         try {

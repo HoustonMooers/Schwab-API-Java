@@ -73,7 +73,7 @@ public class SchwabAPI {
     }
     
 	public static String getAccountNumberFromDisplayName(String displayname) {
-		return displaynames.get(displaynames.get(displayname));
+		return displaynames.get(displayname);
 	}
     
     public String getHashAccountNumber(String displayname) {
