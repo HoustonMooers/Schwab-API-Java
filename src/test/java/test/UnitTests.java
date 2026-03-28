@@ -138,19 +138,19 @@ public class UnitTests {
 	private void oneTriggersAOneCancelsAnotherOrder() {
 		String accountnumber = api.getRandomAccount().getValue();
 		Order order = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.TRIGGER);
-		order.price = 180d;
+		order.price = "180";
 		AccountEquity instrument = new AccountEquity("IBM");
 		OrderLegCollection ol = new OrderLegCollection(Instruction.BUY, 3, instrument);
 		order.addOrderLeg(ol);
 
 		Order order2 = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		order2.price = 231d;
+		order2.price = "231";
 		AccountEquity instrument2 = new AccountEquity("AAPL");
 		OrderLegCollection ol2 = new OrderLegCollection(Instruction.BUY, 2, instrument2);
 		order2.addOrderLeg(ol2);
 
 		Order order3 = new Order(OrderType.STOP, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		order3.stopPrice = 120d;
+		order3.stopPrice = "120";
 		AccountEquity instrument3 = new AccountEquity("AMD");
 		OrderLegCollection ol3 = new OrderLegCollection(Instruction.SELL, 2, instrument3);
 		order3.addOrderLeg(ol3);
@@ -171,12 +171,12 @@ public class UnitTests {
 	private void oneOrderTriggersAnother() {
 		String accountnumber = api.getRandomAccount().getValue();
 		Order order = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.TRIGGER);
-		order.price = 180d;
+		order.price = "180";
 		AccountEquity instrument = new AccountEquity("IBM");
 		OrderLegCollection ol = new OrderLegCollection(Instruction.BUY, 3, instrument);
 		order.addOrderLeg(ol);
 		Order triggeredorder = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		triggeredorder.price = 240d;
+		triggeredorder.price = "240";
 		AccountEquity dependentorderinstrument = new AccountEquity("JPM");
 		OrderLegCollection dependentorder = new OrderLegCollection(Instruction.BUY, 2, dependentorderinstrument);
 		triggeredorder.addOrderLeg(dependentorder);
@@ -194,7 +194,7 @@ public class UnitTests {
 		String[] randomsymbol = getRandomSymbol(spyatmoption, numlegs);
 		String accountnumber = api.getRandomAccount().getValue();
 		Order order = new Order(OrderType.NET_DEBIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		order.price = 0.08;
+		order.price = "0.08";
 		for(int i = 0; i < numlegs; i++) {
 			AccountOption instrument = new AccountOption(randomsymbol[i]);
 			if(i % 2 == 0) {
@@ -216,7 +216,7 @@ public class UnitTests {
 		String[] randomsymbol = getRandomSymbol(spyatmoption, 1);
 		String accountnumber = api.getRandomAccount().getValue();
 		Order order = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		order.price = -500d;
+		order.price = "-500";
 		AccountOption instrument = new AccountOption(randomsymbol[0]);
 		OrderLegCollection ol = new OrderLegCollection(Instruction.BUY_TO_OPEN, 1, instrument);
 		order.addOrderLeg(ol);
@@ -266,7 +266,7 @@ public class UnitTests {
 	private void placeStockOrder() {
 		String accountnumber = api.getRandomAccount().getValue();
 		Order order = new Order(OrderType.LIMIT, Session.NORMAL, Duration.GOOD_TILL_CANCEL, OrderStrategyType.SINGLE);
-		order.price = 180d;
+		order.price = "180";
 		AccountsInstrument instrument = new AccountEquity("IBM");
 		OrderLegCollection ol = new OrderLegCollection(Instruction.BUY, 3, instrument);
 		order.addOrderLeg(ol);

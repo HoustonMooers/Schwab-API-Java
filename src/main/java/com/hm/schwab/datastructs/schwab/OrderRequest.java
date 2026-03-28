@@ -46,7 +46,7 @@ public class OrderRequest {
     public String releaseTime; // $date-time
 
     @JsonProperty("stopPrice")
-    public Double stopPrice;
+    public String stopPrice;
 
     @JsonProperty("stopPriceLinkBasis")
     public StopPriceLinkBasis stopPriceLinkBasis;
@@ -55,7 +55,7 @@ public class OrderRequest {
     public StopPriceLinkType stopPriceLinkType;
 
     @JsonProperty("stopPriceOffset")
-    public Double stopPriceOffset;
+    public String stopPriceOffset;
 
     @JsonProperty("stopType")
     public StopType stopType;
@@ -67,7 +67,7 @@ public class OrderRequest {
     public PriceLinkType priceLinkType;
 
     @JsonProperty("price")
-    public Double price;
+    public String price;
 
     @JsonProperty("taxLotMethod")
     public TaxLotMethod taxLotMethod;

@@ -64,8 +64,9 @@ public class Order {
     @JsonProperty("releaseTime")
     public String releaseTime;
 
+    //changed to string for precision issues
     @JsonProperty("stopPrice")
-    public Double stopPrice;
+    public String stopPrice;
 
     @JsonProperty("stopPriceLinkBasis")
     public StopPriceLinkBasis stopPriceLinkBasis;
@@ -73,8 +74,9 @@ public class Order {
     @JsonProperty("stopPriceLinkType")
     public StopPriceLinkType stopPriceLinkType;
 
+    //changed to string for precision issues
     @JsonProperty("stopPriceOffset")
-    public Double stopPriceOffset;
+    public String stopPriceOffset;
 
     @JsonProperty("stopType")
     public StopType stopType;
@@ -85,8 +87,9 @@ public class Order {
     @JsonProperty("priceLinkType")
     public PriceLinkType priceLinkType;
 
+    //changed to string for precision issues
     @JsonProperty("price")
-    public Double price;
+    public String price;
 
     @JsonProperty("taxLotMethod")
     public TaxLotMethod taxLotMethod;

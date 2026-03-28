@@ -125,14 +125,31 @@ public class Authenticator {
 	}
 
 	private String openURLInBrowser(String url) {
-		if (Desktop.isDesktopSupported()) {
-			try {
-				Desktop desktop = Desktop.getDesktop();
-				desktop.browse(new URI(url));
-			} catch (IOException | URISyntaxException e) {
-				e.printStackTrace();
-			}
-		}
-		return ResponsePopup.getResponse(url);
+	    boolean opened = false;
+
+	    try {
+	        // 1. Try the standard Desktop API
+	        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+	            Desktop.getDesktop().browse(new URI(url));
+	            opened = true;
+	        }
+	    } catch (Exception e) {
+	        // Log the failure and fall through to the manual method
+	        System.err.println("Standard Desktop.browse failed, trying fallback...");
+	    }
+
+	    // 2. Fallback for Linux/Fedora/KDE if the standard way failed
+	    if (!opened) {
+	        try {
+	            // This works on virtually all Linux distros (Fedora, Mint, Ubuntu, etc.)
+	            new ProcessBuilder("xdg-open", url).start();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            // At this point, you might want to show an error to the user 
+	            // telling them to copy-paste the URL manually.
+	        }
+	    }
+
+	    return ResponsePopup.getResponse(url);
 	}
 }
