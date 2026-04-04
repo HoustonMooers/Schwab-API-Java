@@ -1,5 +1,6 @@
 package com.hm.schwab.clientinterface;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -39,12 +40,22 @@ import com.hm.schwab.oauth.Authenticator;
 import com.hm.schwab.theme.LAF;
 
 public class SchwabAPI {
-    private Authenticator authenticator = Authenticator.getAuthenticator();
+    private Authenticator authenticator;
     private Map<String, String> accounts;
     private static Map<String, String> displaynames;
     private StreamingManager streamingManager;
     
     public SchwabAPI() throws IOException, InterruptedException {
+        this.authenticator = Authenticator.getAuthenticator();
+        initialize();
+    }
+
+    public SchwabAPI(File clientSecretsFile) throws IOException, InterruptedException {
+        this.authenticator = Authenticator.getAuthenticator(clientSecretsFile);
+        initialize();
+    }
+
+    private void initialize() throws IOException, InterruptedException {
         LAF.applyTheme();
         this.accounts = new HashMap<>();
         List<AccountNumberHash> accounts = getAccountNumbers();

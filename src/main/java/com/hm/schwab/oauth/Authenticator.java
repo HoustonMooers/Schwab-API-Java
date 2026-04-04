@@ -4,7 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -17,41 +16,95 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Authenticator {
 	private static OauthParams secrets;
-	private static Authenticator authenticator = new Authenticator();
+	private static Authenticator authenticator;
 	private static File REFRESH_TOKEN_PATH;
+	private static File initializedClientSecretsFile;
 	private Token refreshtoken;
 	private Token activetoken;
 
-
-	public static Authenticator getAuthenticator() {
+	public static synchronized Authenticator getAuthenticator() {
+		File defaultClientSecretsFile = getDefaultClientSecretsFile();
+		if (authenticator == null) {
+			authenticator = new Authenticator(defaultClientSecretsFile);
+			initializedClientSecretsFile = defaultClientSecretsFile.getAbsoluteFile();
+		}
 		return authenticator;
 	}
 
-	private Authenticator() {
-		setupSecretsAndRefreshToken();
+	public static synchronized Authenticator getAuthenticator(File clientSecretsFile) {
+		File requestedFile = normalizeClientSecretsFile(clientSecretsFile);
+		if (authenticator == null) {
+			authenticator = new Authenticator(requestedFile);
+			initializedClientSecretsFile = requestedFile.getAbsoluteFile();
+		}
+		else if (!initializedClientSecretsFile.equals(requestedFile.getAbsoluteFile())) {
+			throw new IllegalStateException(
+				"Authenticator already initialized with client secrets file: "
+				+ initializedClientSecretsFile
+				+ ". Cannot reinitialize with different client secrets file: "
+				+ requestedFile
+			);
+		}
+		return authenticator;
+	}
+
+	private Authenticator(File clientSecretsFile) {
+		setupSecretsAndRefreshToken(clientSecretsFile);
+		initializeTokens();
+	}
+
+	private void initializeTokens() {
 		if (REFRESH_TOKEN_PATH.exists()) {
 			refreshtoken = Token.load(REFRESH_TOKEN_PATH);
 			refreshActiveToken();
-		} else {
+		}
+		else {
 			doFullAuthentication();
 		}
 	}
 
-	private void setupSecretsAndRefreshToken() {
-		// Get the path to the user's home directory
+	private static File getDefaultClientSecretsFile() {
 		File homeDir = new File(System.getProperty("user.home"), ".schwab");
-		File clientsecrets = new File(homeDir, "client_secrets.json");
-		if(!clientsecrets.exists()) {
+		return new File(homeDir, "client_secrets.json");
+	}
+
+	private static File normalizeClientSecretsFile(File clientSecretsFile) {
+		return clientSecretsFile == null ? getDefaultClientSecretsFile() : clientSecretsFile;
+	}
+
+	private void setupSecretsAndRefreshToken(File clientSecretsFile) {
+		File homeDir = new File(System.getProperty("user.home"), ".schwab");
+		File clientsecrets = normalizeClientSecretsFile(clientSecretsFile);
+
+		if (!clientsecrets.exists()) {
 			JOptionPane.showMessageDialog(null,
 					"ERROR: Cannot find client_secrets.json file located at: " + clientsecrets,
 					"File Not Found",
 					JOptionPane.ERROR_MESSAGE);
-			System.exit(1); // Terminate the program after displaying the error message
+			System.exit(1);
 		}
-		secrets = OauthParams.loadJSON(clientsecrets);
 
-		// Path to refresh token it exists.  It will be created after first use.
-		REFRESH_TOKEN_PATH = new File(homeDir, "refresh_token");
+		secrets = OauthParams.loadJSON(clientsecrets);
+		if (secrets == null || secrets.getAppKey() == null || secrets.getAppKey().isBlank()) {
+			JOptionPane.showMessageDialog(null,
+					"ERROR: Failed to load valid client_secrets.json file located at: " + clientsecrets,
+					"Invalid client_secrets.json",
+					JOptionPane.ERROR_MESSAGE);
+			System.exit(1);
+		}
+
+		REFRESH_TOKEN_PATH = new File(homeDir, "refresh_token_" + getAppKeySuffix(secrets.getAppKey()));
+	}
+
+	private String getAppKeySuffix(String appKey) {
+		String cleaned = appKey.replaceAll("[^A-Za-z0-9]", "");
+		if (cleaned.isEmpty()) {
+			return "default";
+		}
+		if (cleaned.length() > 5) {
+			return cleaned.substring(0, 5);
+		}
+		return cleaned;
 	}
 
 	public synchronized String getActiveToken() {
@@ -62,9 +115,10 @@ public class Authenticator {
 	}
 
 	private void refreshActiveToken() {
-		if (refreshtoken.isExpired()) {
+		if (refreshtoken == null || refreshtoken.isExpired()) {
 			doFullAuthentication();
-		} else {
+		}
+		else {
 			activetoken = RefreshToken.refresh(refreshtoken, secrets);
 		}
 	}
@@ -104,12 +158,14 @@ public class Authenticator {
 				// store refresh token
 				LocalDateTime refreshexpirationtime = LocalDateTime.now().plusDays(7).minusMinutes(4);
 				long expirationtime = refreshexpirationtime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-				Token refreshtoken = new Token(params.refresh_token, expirationtime);
-				refreshtoken.store(REFRESH_TOKEN_PATH);
+				Token newrefreshtoken = new Token(params.refresh_token, expirationtime);
+				newrefreshtoken.store(REFRESH_TOKEN_PATH);
+				refreshtoken = newrefreshtoken;
 				// setup active token
 				expirationtime = System.currentTimeMillis() + Integer.parseInt(params.expires_in) * 1000 - Token.EXPIRATION_SLACK_TIME_IN_MS;
 				activetoken = new Token(params.access_token, expirationtime);
-			} else {
+			}
+			else {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Authentication request failed!" + System.lineSeparator());
 				sb.append("Response Code: " + response.statusCode() + System.lineSeparator());
@@ -117,10 +173,13 @@ public class Authenticator {
 				System.err.println(sb.toString());
 				JOptionPane.showMessageDialog(null, "An error occurred: " + sb.toString(), "Error", JOptionPane.ERROR_MESSAGE);
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
+		}
+		catch (InterruptedException e) {
 			e.printStackTrace();
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -133,7 +192,8 @@ public class Authenticator {
 	            Desktop.getDesktop().browse(new URI(url));
 	            opened = true;
 	        }
-	    } catch (Exception e) {
+	    }
+	    catch (Exception e) {
 	        // Log the failure and fall through to the manual method
 	        System.err.println("Standard Desktop.browse failed, trying fallback...");
 	    }
@@ -143,9 +203,10 @@ public class Authenticator {
 	        try {
 	            // This works on virtually all Linux distros (Fedora, Mint, Ubuntu, etc.)
 	            new ProcessBuilder("xdg-open", url).start();
-	        } catch (IOException e) {
+	        }
+	        catch (IOException e) {
 	            e.printStackTrace();
-	            // At this point, you might want to show an error to the user 
+	            // At this point, you might want to show an error to the user
 	            // telling them to copy-paste the URL manually.
 	        }
 	    }
