@@ -63,14 +63,16 @@ public class UnitTests {
 	@Test
 	public void accountTests() {
 		//positions
-		getAccountPositions();
+		//getAccountPositions();
 
 		//orders
-		getOrders();
+		//getOrders();
 		//cancelOrder();
 
 		//do not blindly enable these orders on a production account...
 		//runPlaceOrderTests();
+		
+		getInstrumentsTest();
 	}
 
 	private void cancelOrder() {
@@ -383,6 +385,12 @@ public class UnitTests {
 	public void getInstrumentsTest() {
 		try {
 			InstrumentResponse expirationdetails = api.getInstruments(new InstrumentSearchQuery("AAPL,AMD", Projection.Fundamental));
+			assertNotNull(expirationdetails);
+			//search by description (name of company)
+			expirationdetails = api.getInstruments(new InstrumentSearchQuery("Apple", Projection.DescSearch));
+			assertNotNull(expirationdetails);
+			//search by symbol - ticker
+			expirationdetails = api.getInstruments(new InstrumentSearchQuery("AAPL", Projection.SymbolSearch));
 			assertNotNull(expirationdetails);
 		} catch (Exception e) {
 			e.printStackTrace();
