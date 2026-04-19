@@ -3,7 +3,7 @@
 Provides access to Charles Schwab account management, trading, and market data via their REST API and Websocket interface.  Currently supports all API for Account Management and Market Data.  Minimal dependencies. Only depends on the Jackson library for JSON parsing and Java-Websocket for streaming. Fully concurrent. Designed to be lightweight, fast, and easy to use.
 
 ## Installation
-This project is configured as a Maven project developed with Eclipse.  The easiest way to set it up is to simply copy the .jar or .jar with dependencies (if your project does not already use Jackson Databind) into your project and reference it.  Alternatively, import the project into your development environment as a Maven project and use Maven to build it.
+This project is configured as a Maven project developed with Eclipse.  The easiest way to set it up is to simply copy the .jar or .jar with dependencies (if your project does not already use Jackson Databind or Java-Websocket) into your project and reference it.  Alternatively, import the project into your development environment as a Maven project and use Maven to build it.
 
 ## Setup
 
